@@ -1,15 +1,15 @@
 import sys
-from PySide6.QtWidgets import *
-from PySide6.QtGui import *
+
+from PySide6.QtWidgets import QMenuBar, QApplication, QWidget, QTreeView, QVBoxLayout
 
 app = QApplication(sys.argv)
 
 class MainWindow(QWidget):
-    menuBar = QMenuBar()
-    treeView = QTreeView()
-    verticalLayout = QVBoxLayout() #contains a horizontal layout for joining the menu bar, tree/edit and 3d view
-
     def __init__(self):
+        super().__init__()
+        self.menuBar = QMenuBar(self)
+        self.treeView = QTreeView(self)
+        self.verticalLayout = QVBoxLayout(self)  # contains a horizontal layout for joining the menu bar, tree/edit and 3d view
         self.build_menu_bar()
         self.build_tree_view()
         self.build_edit_view()
@@ -37,11 +37,10 @@ class MainWindow(QWidget):
         pass
 
     def build_layout(self):
-        #self.verticalLayout.addWidget(self.menuBar)
-        #self.verticalLayout.addWidget(self.treeView)
-        self.menuBar.setLayout(self.verticalLayout)
-        self.treeView.setLayout(self.verticalLayout)
-
+        self.verticalLayout.addWidget(self.menuBar)
+        self.verticalLayout.addWidget(self.treeView)
+        self.show()
+        pass
 
 
 def main():
