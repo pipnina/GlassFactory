@@ -1,44 +1,32 @@
 import sys
-
-from PySide6.QtWidgets import QMenuBar, QApplication, QWidget, QTreeView, QVBoxLayout
+from PySide6.QtWidgets import QApplication, QWidget, QTreeView, QListView, QGraphicsView, QVBoxLayout, QHBoxLayout
+from menuBar import MenuBar
 
 app = QApplication(sys.argv)
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self.menuBar = QMenuBar(self)
+        self.menuBar = MenuBar()
         self.treeView = QTreeView(self)
-        self.verticalLayout = QVBoxLayout(self)  # contains a horizontal layout for joining the menu bar, tree/edit and 3d view
-        self.build_menu_bar()
-        self.build_tree_view()
-        self.build_edit_view()
-        self.build_3d_view()
+        self.listView = QListView(self)
+        self.graphicsViewport = QGraphicsView(self)
+        self.verticalLayout_MenuMerger = QVBoxLayout(self)  # contains a horizontal layout for joining the menu bar, to the layout containing the rest of the window
+        self.verticalLayout_TreeMerger = QVBoxLayout(self) # contains the two trees above and below eachother
+        self.horizontalLayout_Tree3DMerger = QHBoxLayout(self) # Joins the trees and the 3D space together
+
         self.build_layout()
 
-    def build_menu_bar(self):
-        fileMenu = self.menuBar.addMenu("File")
-        fileMenuNew = fileMenu.addAction("New")
-        fileMenuOpen = fileMenu.addAction("Open")
-        fileMenuOpenRecent = fileMenu.addMenu("Open recent:")
-
-        self.menuBar.addMenu("Edit")
-        self.menuBar.addMenu("Generate")
-        #self.menuBar.show()
-
-    def build_tree_view(self):
-        #self.treeView.show()
-        pass
-
-    def build_edit_view(self):
-        pass
-
-    def build_3d_view(self):
-        pass
-
     def build_layout(self):
-        self.verticalLayout.addWidget(self.menuBar)
-        self.verticalLayout.addWidget(self.treeView)
+        self.verticalLayout_MenuMerger.addWidget(self.menuBar)
+        self.verticalLayout_MenuMerger.addLayout(self.horizontalLayout_Tree3DMerger)
+
+        self.horizontalLayout_Tree3DMerger.addLayout(self.verticalLayout_TreeMerger)
+        self.horizontalLayout_Tree3DMerger.addWidget(self.graphicsViewport)
+
+        self.verticalLayout_TreeMerger.addWidget(self.treeView)
+        self.verticalLayout_TreeMerger.addWidget(self.listView)
+
         self.show()
         pass
 
