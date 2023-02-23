@@ -1,9 +1,17 @@
 from PySide6.QtWidgets import QTreeWidget, QTreeWidgetItem, QTableWidget, QTableWidgetItem, QVBoxLayout, QHeaderView
 from PySide6.QtCore import QAbstractTableModel
+from Components.componentManager import ComponentManager
 
 class EditorPanel(QVBoxLayout):
-    def __init__(self):
+
+    parts_manager = [ComponentManager]
+
+    def __init__(self, parts_manager: ComponentManager):
         super().__init__()
+
+        # We set the parts_manager as this view represents the data from that source
+        self.parts_manager = parts_manager
+
         # Create the views and merge them into the box layout
         tree_view = QTreeWidget()
         table_view = QTableWidget()
@@ -21,3 +29,8 @@ class EditorPanel(QVBoxLayout):
         table_view.setHorizontalHeaderItem(1, QTableWidgetItem("Value"))
 
         # Then for the rows, a more complex handling is required depending on what is selected in tree widget
+
+    # grabTree fetches and updates the information stored by the
+    def grabTree(self):
+        pass
+
