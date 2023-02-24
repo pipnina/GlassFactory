@@ -1,15 +1,15 @@
 from PySide6.QtWidgets import QMenuBar
-from Components.componentManager import ComponentManager
+
+from Components.component import ComponentType
+from Components.component_manager import ComponentManager
 
 
 class MenuBar(QMenuBar):
 
     parts_manager = [ComponentManager]
 
-    def __init__(self, parts_manager: ComponentManager):
+    def __init__(self):
         super().__init__()
-        self.parts_manager = parts_manager
-
         # Create the interactions for the "file" menu
         file_menu = self.addMenu("File")
         #Create the interaction for the "New" submenu
@@ -25,6 +25,7 @@ class MenuBar(QMenuBar):
         self.addMenu("Generate")
 
 
-    def file_add_clicked(self):
-        self.parts_manager.new_component("Lens", "New Lens")
+    @staticmethod
+    def file_add_clicked():
+        ComponentManager.get_manager().new_component(component_type=ComponentType.Lens)
         print("Been pressed")
