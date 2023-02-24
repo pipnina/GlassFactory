@@ -14,7 +14,8 @@ class MenuBar(QMenuBar):
         file_menu = self.addMenu("File")
         #Create the interaction for the "New" submenu
         file_menu_new = file_menu.addAction("New")
-        file_menu_new.connect(parts_manager.newComponent("Lens", "New Lens"))
+        # file_menu_new.clicked.connect(self.fileAddClicked())
+        file_menu_new.triggered.connect(self.file_add_clicked)
 
 
         file_menu_open = file_menu.addAction("Open")
@@ -22,3 +23,8 @@ class MenuBar(QMenuBar):
 
         self.addMenu("Edit")
         self.addMenu("Generate")
+
+
+    def file_add_clicked(self):
+        self.parts_manager.new_component("Lens", "New Lens")
+        print("Been pressed")

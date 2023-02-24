@@ -9,7 +9,12 @@ class SurfaceProperties:
     is_flat: False
     is_reflective: False
 
+    def __init__(self):
+        super().__init__()
+        pass
+
     def __init__(self, length: float, constant: float, flat: bool, reflective: bool):
+        super().__init__()
         self.focal_length = length
         self.conic_constant = constant
         self.is_flat = flat
@@ -17,10 +22,14 @@ class SurfaceProperties:
 
 
 class Lens(Component):
-    properties = {"diameter": 30, "thickness": 5, "surfaces": [SurfaceProperties]}
+    #properties = {"diameter": 30, "thickness": 5, "surfaces": [SurfaceProperties]}
     #diameter = 30
     #thickness = 5
     #surfaces: [SurfaceProperties] = []
+
+    def __init__(self):
+        super().__init__()
+        self.properties["surfaces"].append(SurfaceProperties())
 
     def __init__(self, surface1: SurfaceProperties, surface2: SurfaceProperties, diameter: float, thickness: float):
         super().__init__()

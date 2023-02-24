@@ -12,7 +12,7 @@ class Component:
     #part_name = "New Lens"
     #parent: "Component"
 
-    properties ={
+    properties = {
         "x_pos": 0,
         "y_pos": 0,
         "z_pos": 0,
@@ -22,6 +22,9 @@ class Component:
         "part_name": "Unnamed Void",
         "parent": ["Component"]
     }
+
+    def __init__(self):
+        super().__init__()
 
     def __init__(self, x: float, y: float, z: float, xr: float, yr: float, prt_typ: str, prt_name: str, parent: "Component"):
         self.properties["x_pos"] = x
