@@ -3,14 +3,18 @@ from PySide6.QtWidgets import QApplication, QWidget, QTreeView, QListView, QGrap
 from menuBar import MenuBar
 from editorPanel import EditorPanel
 from graphicsViewport import GraphicsViewport
+from Components.componentManager import ComponentManager
 
 app = QApplication(sys.argv)
 
+
 class MainWindow(QWidget):
-    def __init__(self):
+    def __init__(self, factory: ComponentManager):
         super().__init__()
-        self.menu_bar = MenuBar()
-        self.editor_panel = EditorPanel()
+
+        # Build the UI elements
+        self.menu_bar = MenuBar(factory)
+        self.editor_panel = EditorPanel(factory)
         self.graphics_viewport = GraphicsViewport()
 
         self.verticalLayout_MenuMerger = QVBoxLayout(self)  # contains a horizontal layout for joining the menu bar, to the layout containing the rest of the window
@@ -18,6 +22,9 @@ class MainWindow(QWidget):
         self.horizontalLayout_Tree3DMerger = QHBoxLayout(self) # Joins the trees and the 3D space together
 
         self.build_layout()
+
+        # Now we link them together as needed
+
 
     # Combine UI elements into a layout to present them properly on screen
     def build_layout(self):
@@ -32,7 +39,8 @@ class MainWindow(QWidget):
 
 def main():
     app.setApplicationDisplayName("GlassFactory")
-    main_window = MainWindow()
+    factory = ComponentManager()
+    main_window = MainWindow(factory)
     app.exec()
 
 
