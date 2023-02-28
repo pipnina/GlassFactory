@@ -16,6 +16,7 @@ class ComponentType(Enum):
 @dataclass
 class Component:
     component_name: str
+    component_type: ComponentType
     parent: str
     x: float = 0
     y: float = 0

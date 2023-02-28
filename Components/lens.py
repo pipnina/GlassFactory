@@ -1,4 +1,4 @@
-from Components.component import Component
+from Components.component import Component, ComponentType
 from Components.surface_properties import SurfaceProperties
 
 
@@ -12,7 +12,7 @@ class Lens(Component):
         if component_name is None:
             component_name = "New Lens"
 
-        super().__init__(component_name=component_name, parent=parent)
+        super().__init__(component_name=component_name, component_type=ComponentType.Lens, parent=parent)
 
         # If no surfaces are provided, create a pair
         if surfaces is None:
