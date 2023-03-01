@@ -14,7 +14,6 @@ class MenuBar(QMenuBar):
         file_menu = self.addMenu("File")
         #Create the interaction for the "New" submenu
         file_menu_new = file_menu.addAction("New")
-        # file_menu_new.clicked.connect(self.fileAddClicked())
         file_menu_new.triggered.connect(self.file_add_clicked)
 
 

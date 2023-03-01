@@ -17,6 +17,7 @@ class ComponentType(Enum):
 class Component:
     component_name: str
     component_type: ComponentType
+    component_UUID: None
     parent: str
     x: float = 0
     y: float = 0

@@ -1,8 +1,8 @@
 import sys
-from PySide6.QtWidgets import QApplication, QWidget, QTreeView, QListView, QGraphicsView, QVBoxLayout, QHBoxLayout
-from menu_bar import MenuBar
-from editor_panel import EditorPanel
-from graphics_viewport import GraphicsViewport
+from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout
+from UI_code.menu_bar import MenuBar
+from UI_code.editor_panel import EditorPanel
+from UI_code.graphics_viewport import GraphicsViewport
 
 app = QApplication(sys.argv)
 

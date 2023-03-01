@@ -2,6 +2,7 @@ from PySide6 import QtCore
 from PySide6.QtWidgets import QTreeWidget, QTreeWidgetItem, QTableWidget, QTableWidgetItem, QVBoxLayout
 from Components.component_manager import ComponentManager
 from Components.component import ComponentType, Component
+from UI_code.CustomQTreeWidgetItem import CustomQTreeWidgetItem
 from event_manager import subscribe, raise_event, Event
 
 
@@ -45,12 +46,12 @@ class EditorPanel(QVBoxLayout):
         self.tree_view.clear()
 
         for item in ComponentManager.get_manager().components:
-            new_item = QTreeWidgetItem(item.component_name)
+            new_item = CustomQTreeWidgetItem(item.component_name, item.component_UUID)
             new_item.setText(0, item.component_name)
             new_item.setFlags(new_item.flags() | QtCore.Qt.ItemIsEditable)
             self.tree_view.addTopLevelItem(new_item)
 
-        self.table_add_lens(ComponentManager.get_manager().components[0])
+        # self.table_add_lens(ComponentManager.get_manager().components[0])
 
     # This triggers the table view to be updated whenever a new item is selected in the tree view
     # TODO: Maybe implement something to protect it, as currently called when tree empty at program start
@@ -60,12 +61,15 @@ class EditorPanel(QVBoxLayout):
                 if component.component_type == ComponentType.Lens:
                     self.table_add_lens(component)
                     self.selected_tree_item = component
+        print("Tree Selection changed")
         pass
 
     def tree_data_changed(self):
-        #self.tree_view.closePersistentEditor(self.tree_view.currentItem())
+            for component in ComponentManager.get_manager().components:
+                if self.tree_view.currentItem().text() == component.component_name:
+                    print("Two components have the same name! Abort!")
+                    self.update_view()
 
-        pass
 
 
     # We need some functions for allowing us to present the component's properties in the table

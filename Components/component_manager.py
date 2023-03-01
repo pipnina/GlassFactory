@@ -8,6 +8,7 @@ class ComponentManager:
 
     def __init__(self):
         self.components: list[Component] = []
+        self.UUID_increment = 0
 
     @staticmethod
     def get_manager():
@@ -41,7 +42,11 @@ class ComponentManager:
             case unknown_type:
                 print(f"ComponentManager: Invalid component type: {unknown_type}")
                 return
+        new_component.component_UUID = self.choose_UUID()
 
         self.components.append(new_component)
-        print(f"{new_component.component_name=}") # TODO: Remove this after done testing
         raise_event(Event.ComponentChanged)
+
+    def choose_UUID(self):
+        self.UUID_increment += 1
+        return self.UUID_increment
