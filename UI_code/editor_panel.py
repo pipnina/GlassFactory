@@ -1,5 +1,5 @@
 from PySide6 import QtCore
-from PySide6.QtWidgets import QTreeWidget, QTreeWidgetItem, QTableWidget, QTableWidgetItem, QVBoxLayout
+from PySide6.QtWidgets import QTreeWidget, QTreeWidgetItem, QTableWidget, QTableWidgetItem, QVBoxLayout, QListWidget, QListWidgetItem
 from Components.component_manager import ComponentManager
 from Components.component import ComponentType, Component
 from UI_code.CustomQTreeWidgetItem import CustomQTreeWidgetItem
@@ -12,6 +12,7 @@ class EditorPanel(QVBoxLayout):
     parts_manager = [ComponentManager]
     tree_view: [QTreeWidget]
     table_view: [QTableWidget]
+    list_view: [QListWidget]
     selected_tree_item: [Component]
 
     def __init__(self):
@@ -20,6 +21,8 @@ class EditorPanel(QVBoxLayout):
         # Instantiate and merge the views into the box layout
         self.tree_view = QTreeWidget()
         self.table_view = QTableWidget()
+        self.list_view = QListWidget()
+        self.list_view.show()
 
         self.addWidget(self.tree_view)
         self.addWidget(self.table_view)
@@ -74,6 +77,15 @@ class EditorPanel(QVBoxLayout):
 
     # We need some functions for allowing us to present the component's properties in the table
     def table_add_lens(self, lens):
+        q_list_widget_items: list[QListWidgetItem] = lens.get_ui()
+
+        if len(q_list_widget_items) >= 1:
+            for widget in q_list_widget_items:
+                self.list_view.addItem(widget)
+        else:
+            print("Something's wrong, a component is missing a config UI!")
+
+
         self.table_view.clear()
         self.table_view.setRowCount(14)
         self.table_view.setItem(0,0, QTableWidgetItem("Name"))

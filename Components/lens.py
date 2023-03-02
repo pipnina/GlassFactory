@@ -21,3 +21,8 @@ class Lens(Component):
 
         self.diameter = diameter
         self.thickness = thickness
+
+    def get_ui(self):
+        q_list_widget_items = super().get_ui()
+        print("This is a lens")
+        return q_list_widget_items
