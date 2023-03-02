@@ -1,7 +1,7 @@
 # Lens, Baffle, Prism, Camera, Focuser, Light, Group
 from dataclasses import dataclass
 from enum import Enum
-from PySide6.QtWidgets import QListWidgetItem
+from PySide6.QtWidgets import QListWidgetItem, QHBoxLayout, QCheckBox, QWidget, QLabel, QLayout, QLineEdit
 
 
 class ComponentType(Enum):
@@ -28,6 +28,29 @@ class Component:
 
     def get_ui(self):
         q_list_widget_items = []
-        q_list_widget_items.append(QListWidgetItem("Hello"))
+
+        # component_name list element
+        name_widget = self.make_config_widget("Name: ")
+        name_textbox = QLineEdit()
+        name_widget.layout().addWidget(name_textbox)
+        q_list_widget_items.append(name_widget)
+
+        # X position list element
+        name_widget = self.make_config_widget("X: ")
+        name_textbox = QLineEdit()
+        name_widget.layout().addWidget(name_textbox)
+        q_list_widget_items.append(name_widget)
 
         return q_list_widget_items
+
+    def make_config_widget(self, label_name:str):
+        widget = QWidget()
+        layout = QHBoxLayout()
+        list_item = QLabel(label_name)
+
+        layout.addWidget(list_item)
+        layout.addStretch()
+        layout.setSizeConstraint(QLayout.SetFixedSize)
+        widget.setLayout(layout)
+
+        return widget

@@ -1,5 +1,5 @@
 from PySide6 import QtCore
-from PySide6.QtWidgets import QTreeWidget, QTreeWidgetItem, QTableWidget, QTableWidgetItem, QVBoxLayout, QListWidget, QListWidgetItem
+from PySide6.QtWidgets import QTreeWidget, QTreeWidgetItem, QTableWidget, QTableWidgetItem, QVBoxLayout, QListWidget, QListWidgetItem, QWidget
 from Components.component_manager import ComponentManager
 from Components.component import ComponentType, Component
 from UI_code.CustomQTreeWidgetItem import CustomQTreeWidgetItem
@@ -77,11 +77,14 @@ class EditorPanel(QVBoxLayout):
 
     # We need some functions for allowing us to present the component's properties in the table
     def table_add_lens(self, lens):
-        q_list_widget_items: list[QListWidgetItem] = lens.get_ui()
+        q_list_widget_items: list[QWidget] = lens.get_ui()
 
         if len(q_list_widget_items) >= 1:
             for widget in q_list_widget_items:
-                self.list_view.addItem(widget)
+                new_list_item = QListWidgetItem()
+                new_list_item.setSizeHint(widget.sizeHint())
+                self.list_view.addItem(new_list_item)
+                self.list_view.setItemWidget(new_list_item, widget)
         else:
             print("Something's wrong, a component is missing a config UI!")
 
