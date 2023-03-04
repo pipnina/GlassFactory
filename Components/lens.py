@@ -1,5 +1,7 @@
 from Components.component import Component, ComponentType
 from Components.surface_properties import SurfaceProperties
+from PySide6.QtWidgets import QLineEdit
+from event_manager import raise_event, Event
 
 
 class Lens(Component):
@@ -9,6 +11,7 @@ class Lens(Component):
                  diameter: float = 30,
                  thickness: float = 5,
                  surfaces: tuple[SurfaceProperties, SurfaceProperties] = None):
+
         if component_name is None:
             component_name = "New Lens"
 
@@ -25,4 +28,17 @@ class Lens(Component):
     def get_ui(self):
         q_list_widget_items = super().get_ui()
         print("This is a lens")
+
+        # diameter position list element
+        diameter_widget = self._make_config_widget("Diameter: ", self.diameter, self._on_diameter_value_changed)
+        q_list_widget_items.append(diameter_widget)
+
         return q_list_widget_items
+
+    def _on_diameter_value_changed(self, widgetbox):
+        try:
+            self.diameter = float(widgetbox.displayText())
+            raise_event(Event.ComponentChanged)
+        except ValueError:
+            print("You need to enter a number!")
+            widgetbox.setText(str(self.diameter))

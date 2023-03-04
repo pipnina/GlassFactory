@@ -42,11 +42,17 @@ class ComponentManager:
             case unknown_type:
                 print(f"ComponentManager: Invalid component type: {unknown_type}")
                 return
-        new_component.component_UUID = self.choose_UUID()
+
+        self.UUID_increment += 1
+        new_component.component_UUID = self.UUID_increment
 
         self.components.append(new_component)
         raise_event(Event.ComponentChanged)
 
-    def choose_UUID(self):
-        self.UUID_increment += 1
-        return self.UUID_increment
+    @staticmethod
+    def get_component_by_uuid(uuid: int):
+        for component in ComponentManager.get_manager().components:
+            if uuid != component.component_UUID:
+                continue
+            return component
+        return None
