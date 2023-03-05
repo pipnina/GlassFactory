@@ -25,13 +25,18 @@ class Lens(Component):
         self.diameter = diameter
         self.thickness = thickness
 
+    # continue the get_ui method from the parent class Component
     def get_ui(self):
         q_list_widget_items = super().get_ui()
         print("This is a lens")
 
-        # diameter position list element
+        # diameter list element
         diameter_widget = self._make_config_widget("Diameter: ", self.diameter, self._on_diameter_value_changed)
         q_list_widget_items.append(diameter_widget)
+
+        # thickness list element
+        thickness_widget = self._make_config_widget("Thickness: ", self.thickness, self._on_thickness_value_changed)
+        q_list_widget_items.append(thickness_widget)
 
         return q_list_widget_items
 
@@ -42,3 +47,12 @@ class Lens(Component):
         except ValueError:
             print("You need to enter a number!")
             widgetbox.setText(str(self.diameter))
+
+    def _on_thickness_value_changed(self, widgetbox):
+        try:
+            self.thickness = float(widgetbox.displayText())
+            raise_event(Event.ComponentChanged)
+        except ValueError:
+            print("You need to enter a number!")
+            widgetbox.setText(str(self.thickness))
+

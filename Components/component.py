@@ -41,7 +41,7 @@ class Component:
         y_widget = self._make_config_widget("Y: ", self.y, self._on_y_value_changed)
         q_list_widget_items.append(y_widget)
 
-        # rotation position list element
+        # rotation list element
         rotation_widget = self._make_config_widget("Rotation: ", self.xr, self._on_rotation_value_changed)
         q_list_widget_items.append(rotation_widget)
 
@@ -52,6 +52,7 @@ class Component:
         widget = QWidget()
         layout = QHBoxLayout()
         list_item = QLabel(label_name)
+        list_item.setMinimumSize(100, 10)
         textbox = QLineEdit()
         textbox.setText(str(variable))
         textbox.editingFinished.connect(lambda: function(textbox))

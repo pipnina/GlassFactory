@@ -1,7 +1,6 @@
 from PySide6 import QtCore
-from PySide6.QtWidgets import QTreeWidget, QTreeWidgetItem, QTableWidget, QTableWidgetItem, QVBoxLayout, QListWidget, QListWidgetItem, QWidget
+from PySide6.QtWidgets import QTreeWidget, QSplitter, QListWidget, QListWidgetItem, QWidget
 from Components.component_manager import ComponentManager
-from Components.component import ComponentType, Component
 from UI_code.CustomQTreeWidgetItem import CustomQTreeWidgetItem
 from event_manager import subscribe, raise_event, Event
 
@@ -11,16 +10,15 @@ class EditorPanel(QVBoxLayout):
 
     parts_manager = [ComponentManager]
     tree_view: [QTreeWidget]
-    table_view: [QTableWidget]
     list_view: [QListWidget]
 
     def __init__(self):
         super().__init__()
 
         # Instantiate and merge the views into the box layout
+        self.setOrientation(QtCore.Qt.Orientation.Vertical)
         self.tree_view = QTreeWidget()
         self.list_view = QListWidget()
-        self.list_view.show()
 
         self.addWidget(self.tree_view)
         self.addWidget(self.list_view)

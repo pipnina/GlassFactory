@@ -1,5 +1,5 @@
 import sys
-from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout
+from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QSplitter, QMainWindow
 from UI_code.menu_bar import MenuBar
 from UI_code.editor_panel import EditorPanel
 from UI_code.graphics_viewport import GraphicsViewport
@@ -7,7 +7,7 @@ from UI_code.graphics_viewport import GraphicsViewport
 app = QApplication(sys.argv)
 
 
-class MainWindow(QWidget):
+class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
@@ -16,23 +16,13 @@ class MainWindow(QWidget):
         self.editor_panel = EditorPanel()
         self.graphics_viewport = GraphicsViewport()
 
-        self.verticalLayout_MenuMerger = QVBoxLayout(
-            self)  # contains a horizontal layout for joining the menu bar, to the layout containing the rest of the window
-        self.verticalLayout_TreeMerger = QVBoxLayout(self)  # contains the two trees above and below eachother
-        self.horizontalLayout_Tree3DMerger = QHBoxLayout(self)  # Joins the trees and the 3D space together
+        # Joins the trees and the 3D space together
+        self.menu_viewport_splitter = QSplitter(self)
+        self.menu_viewport_splitter.addWidget(self.editor_panel)
+        self.menu_viewport_splitter.addWidget(self.graphics_viewport)
 
-        self.build_layout()
-
-        # Now we link them together as needed
-
-    # Combine UI elements into a layout to present them properly on screen
-    def build_layout(self):
-        self.verticalLayout_MenuMerger.addWidget(self.menu_bar)
-        self.verticalLayout_MenuMerger.addLayout(self.horizontalLayout_Tree3DMerger)
-
-        self.horizontalLayout_Tree3DMerger.addLayout(self.editor_panel)
-        self.horizontalLayout_Tree3DMerger.addWidget(self.graphics_viewport)
-
+        self.setCentralWidget(self.menu_viewport_splitter)
+        self.setMenuBar(self.menu_bar)
         self.show()
 
 

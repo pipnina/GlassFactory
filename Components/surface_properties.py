@@ -7,3 +7,5 @@ class SurfaceProperties:
     conic_constant: float = 0
     is_flat: bool = False
     is_reflective: bool = False
+
+
