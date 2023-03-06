@@ -1,12 +1,12 @@
 from PySide6 import QtCore
-from PySide6.QtWidgets import QTreeWidget, QSplitter, QListWidget, QListWidgetItem, QWidget
+from PySide6.QtWidgets import QTreeWidget, QSplitter, QListWidget, QListWidgetItem, QWidget, QScrollArea, QVBoxLayout, QLabel, QHBoxLayout, QWidget
 from Components.component_manager import ComponentManager
 from UI_code.CustomQTreeWidgetItem import CustomQTreeWidgetItem
 from event_manager import subscribe, raise_event, Event
 
 
 
-class EditorPanel(QVBoxLayout):
+class EditorPanel(QSplitter):
 
     parts_manager = [ComponentManager]
     tree_view: [QTreeWidget]
