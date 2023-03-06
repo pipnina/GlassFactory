@@ -49,7 +49,7 @@ class Component:
 
     @staticmethod
     def _make_config_widget(label_name: str, variable, function):
-        widget = QWidget()
+        # widget = QWidget()
         layout = QHBoxLayout()
         list_item = QLabel(label_name)
         list_item.setMinimumSize(100, 10)
@@ -61,9 +61,9 @@ class Component:
         layout.addWidget(textbox)
         layout.addStretch()
         layout.setSizeConstraint(QLayout.SetFixedSize)
-        widget.setLayout(layout)
+        # widget.setLayout(layout)
 
-        return widget
+        return layout  # widget
 
 
     # Event handlers for handling user input to the UI created
