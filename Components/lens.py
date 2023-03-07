@@ -28,7 +28,6 @@ class Lens(Component):
     # continue the get_ui method from the parent class Component
     def get_ui(self):
         q_list_widget_items = super().get_ui()
-        print("This is a lens")
 
         # diameter list element
         diameter_widget = self._make_config_widget("Diameter: ", self.diameter, self._on_diameter_value_changed)
@@ -37,6 +36,9 @@ class Lens(Component):
         # thickness list element
         thickness_widget = self._make_config_widget("Thickness: ", self.thickness, self._on_thickness_value_changed)
         q_list_widget_items.append(thickness_widget)
+
+        q_list_widget_items.append(self.surfaces[0].get_ui(1))
+        q_list_widget_items.append(self.surfaces[1].get_ui(2))
 
         return q_list_widget_items
 

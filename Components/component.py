@@ -52,7 +52,7 @@ class Component:
         # widget = QWidget()
         layout = QHBoxLayout()
         list_item = QLabel(label_name)
-        list_item.setMinimumSize(100, 10)
+        list_item.setMinimumSize(130, 10)
         textbox = QLineEdit()
         textbox.setText(str(variable))
         textbox.editingFinished.connect(lambda: function(textbox))

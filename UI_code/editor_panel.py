@@ -5,7 +5,6 @@ from UI_code.CustomQTreeWidgetItem import CustomQTreeWidgetItem
 from event_manager import subscribe, raise_event, Event
 
 
-
 class EditorPanel(QSplitter):
 
     parts_manager = [ComponentManager]
@@ -17,7 +16,7 @@ class EditorPanel(QSplitter):
         # Instantiate and merge the views into the box layout
         self.setOrientation(QtCore.Qt.Orientation.Vertical)
         self.tree_view = QTreeWidget()
-
+        self.tree_view.setMaximumWidth(325)
         # The scroll area for the component configuration needs a special setup
         # The area can only display one QWidget, so we must create a blank one, with a vertical layout set
         # The configuration widgets are then added to the vertical layout, creating a scrollable list!
@@ -33,7 +32,6 @@ class EditorPanel(QSplitter):
         self.addWidget(self.tree_view)
         self.addWidget(self.area)
 
-
         # Set up the tree
         self.tree_view.setHeaderHidden(True)
 
@@ -43,8 +41,6 @@ class EditorPanel(QSplitter):
         # These connect QT events to functions in the program. This makes user input work.
         self.tree_view.itemActivated.connect(self._on_tree_selection_changed)
         self.tree_view.itemChanged.connect(self._tree_data_changed)
-
-
 
     # Whenever data changes, this function causes the whole editor panel UI to be rebuilt
     def _update_view(self):
@@ -56,7 +52,6 @@ class EditorPanel(QSplitter):
             new_item.setFlags(new_item.flags() | QtCore.Qt.ItemIsEditable)
             self.tree_view.addTopLevelItem(new_item)
 
-
         if len(selected_tree_view_item) != 0:
             self._on_tree_selection_changed(selected_tree_view_item[0])
 
@@ -65,7 +60,6 @@ class EditorPanel(QSplitter):
         print("Tree Selection changed")
         fresh_layout = QVBoxLayout()
         config_container = QWidget()
-
 
         q_list_widget_items: list[QWidget] = item.component.get_ui()
 
@@ -78,6 +72,7 @@ class EditorPanel(QSplitter):
 
         config_container.setLayout(fresh_layout)
         self.area.setWidget(config_container)
+
     def _tree_data_changed(self, item: CustomQTreeWidgetItem, _column: int):
         print("Component changed!!")
         item.component.component_name = item.text(0)
