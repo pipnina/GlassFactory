@@ -44,16 +44,20 @@ class EditorPanel(QSplitter):
 
     # Whenever data changes, this function causes the whole editor panel UI to be rebuilt
     def _update_view(self):
+        print("Update called")
         selected_tree_view_item = self.tree_view.selectedItems()
         self.tree_view.clear()
+        print("tree view selected and cleared")
 
         for item in ComponentManager.get_manager().components:
             new_item = CustomQTreeWidgetItem(item)
             new_item.setFlags(new_item.flags() | QtCore.Qt.ItemIsEditable)
             self.tree_view.addTopLevelItem(new_item)
+        print ("for loop complete")
 
         if len(selected_tree_view_item) != 0:
             self._on_tree_selection_changed(selected_tree_view_item[0])
+        print("if statement complete")
 
     # This triggers the table view to be generated whenever a new item is selected in the tree view
     def _on_tree_selection_changed(self, item: CustomQTreeWidgetItem):

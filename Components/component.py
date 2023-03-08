@@ -1,5 +1,6 @@
 # Lens, Baffle, Prism, Camera, Focuser, Light, Group
 from dataclasses import dataclass
+from functools import partial
 from enum import Enum
 from PySide6.QtWidgets import QListWidgetItem, QHBoxLayout, QCheckBox, QWidget, QLabel, QLayout, QLineEdit
 from event_manager import raise_event, Event
@@ -31,6 +32,9 @@ class Component:
 
         # component_name list element
         name_widget = self._make_config_widget("Name: ", self.component_name, self._on_name_changed)
+        name_widget.itemAt(0).widget()
+        name_widget.itemAt(1).widget().setText(str(self.component_name))
+        # textbox.editingFinished.connect(lambda: function_ptr(textbox))
         q_list_widget_items.append(name_widget)
 
         # X position list element
@@ -48,14 +52,14 @@ class Component:
         return q_list_widget_items
 
     @staticmethod
-    def _make_config_widget(label_name: str, variable, function):
+    def _make_config_widget(label_name: str, variable, function_ptr):
         # widget = QWidget()
         layout = QHBoxLayout()
         list_item = QLabel(label_name)
         list_item.setMinimumSize(130, 10)
         textbox = QLineEdit()
         textbox.setText(str(variable))
-        textbox.editingFinished.connect(lambda: function(textbox))
+        textbox.editingFinished.connect(partial(function_ptr, textbox))
 
         layout.addWidget(list_item)
         layout.addWidget(textbox)
