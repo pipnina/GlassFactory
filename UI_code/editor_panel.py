@@ -16,7 +16,6 @@ class EditorPanel(QSplitter):
         # Instantiate and merge the views into the box layout
         self.setOrientation(QtCore.Qt.Orientation.Vertical)
         self.tree_view = QTreeWidget()
-        self.tree_view.setFixedWidth(325)
         # The scroll area for the component configuration needs a special setup
         # The area can only display one QWidget, so we must create a blank one, with a vertical layout set
         # The configuration widgets are then added to the vertical layout, creating a scrollable list!
@@ -31,7 +30,6 @@ class EditorPanel(QSplitter):
 
         self.addWidget(self.tree_view)
         self.addWidget(self.area)
-        self.area.resize(325, 400)
 
         # Set up the tree
         self.tree_view.setHeaderHidden(True)
@@ -68,6 +66,7 @@ class EditorPanel(QSplitter):
             fresh_layout.addLayout(widget)
 
         config_container.setLayout(fresh_layout)
+        self.area.setFixedWidth(q_list_widget_items[0].sizeHint().width()+40)
         self.area.setWidget(config_container)
 
     def _tree_data_changed(self, item: CustomQTreeWidgetItem, _column: int):
