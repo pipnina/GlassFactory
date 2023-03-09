@@ -8,6 +8,7 @@ class ComponentManager:
 
     def __init__(self):
         self.components: list[Component] = []
+        self.selected_component: int
         self.UUID_increment = 0
 
     @staticmethod

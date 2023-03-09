@@ -16,7 +16,7 @@ class EditorPanel(QSplitter):
         # Instantiate and merge the views into the box layout
         self.setOrientation(QtCore.Qt.Orientation.Vertical)
         self.tree_view = QTreeWidget()
-        self.tree_view.setMaximumWidth(325)
+        self.tree_view.setFixedWidth(325)
         # The scroll area for the component configuration needs a special setup
         # The area can only display one QWidget, so we must create a blank one, with a vertical layout set
         # The configuration widgets are then added to the vertical layout, creating a scrollable list!
@@ -31,6 +31,7 @@ class EditorPanel(QSplitter):
 
         self.addWidget(self.tree_view)
         self.addWidget(self.area)
+        self.area.resize(325, 400)
 
         # Set up the tree
         self.tree_view.setHeaderHidden(True)
@@ -44,24 +45,16 @@ class EditorPanel(QSplitter):
 
     # Whenever data changes, this function causes the whole editor panel UI to be rebuilt
     def _update_view(self):
-        print("Update called")
-        selected_tree_view_item = self.tree_view.selectedItems()
+        # This builds the data in the tree view
         self.tree_view.clear()
-        print("tree view selected and cleared")
 
         for item in ComponentManager.get_manager().components:
             new_item = CustomQTreeWidgetItem(item)
             new_item.setFlags(new_item.flags() | QtCore.Qt.ItemIsEditable)
             self.tree_view.addTopLevelItem(new_item)
-        print ("for loop complete")
-
-        if len(selected_tree_view_item) != 0:
-            self._on_tree_selection_changed(selected_tree_view_item[0])
-        print("if statement complete")
 
     # This triggers the table view to be generated whenever a new item is selected in the tree view
     def _on_tree_selection_changed(self, item: CustomQTreeWidgetItem):
-        print("Tree Selection changed")
         fresh_layout = QVBoxLayout()
         config_container = QWidget()
 
@@ -78,8 +71,8 @@ class EditorPanel(QSplitter):
         self.area.setWidget(config_container)
 
     def _tree_data_changed(self, item: CustomQTreeWidgetItem, _column: int):
-        print("Component changed!!")
         item.component.component_name = item.text(0)
+        self._on_tree_selection_changed(item)
         raise_event(Event.ComponentChanged)
 
 

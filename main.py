@@ -10,6 +10,7 @@ app = QApplication(sys.argv)
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.setMinimumSize(1024, 768)
         # Build the UI elements
         self.menu_bar = MenuBar()
         self.editor_panel = EditorPanel()
