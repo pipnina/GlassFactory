@@ -20,7 +20,7 @@ class Component:
     component_name: str
     component_type: ComponentType
     component_UUID: None
-    parent: str
+    parent: None
     x: float = 0
     y: float = 0
     #z: float = 0
@@ -32,9 +32,6 @@ class Component:
 
         # component_name list element
         name_widget = self._make_config_widget("Name: ", self.component_name, self._on_name_changed)
-        name_widget.itemAt(0).widget()
-        name_widget.itemAt(1).widget().setText(str(self.component_name))
-        # textbox.editingFinished.connect(lambda: function_ptr(textbox))
         q_list_widget_items.append(name_widget)
 
         # X position list element
@@ -69,6 +66,13 @@ class Component:
 
         return layout  # widget
 
+    def set_parent(self, parent):
+        if parent is not None:
+            print("Cyka Blyat")
+            self.parent.remove_child(self)
+            parent.add_child(self)
+            return
+        print("Parent is None, cannot set parent")
 
     # Event handlers for handling user input to the UI created
     def _on_name_changed(self, widgetbox):

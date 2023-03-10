@@ -1,6 +1,8 @@
 from PySide6 import QtCore
-from PySide6.QtWidgets import QTreeWidget, QSplitter, QListWidget, QListWidgetItem, QWidget, QScrollArea, QVBoxLayout, QLabel, QHBoxLayout, QWidget, QLineEdit
+from PySide6.QtCore import QPoint
+from PySide6.QtWidgets import QTreeWidget, QSplitter, QScrollArea, QVBoxLayout, QWidget, QMenu
 from Components.component_manager import ComponentManager
+from Components.component import ComponentType
 from UI_code.CustomQTreeWidgetItem import CustomQTreeWidgetItem
 from event_manager import subscribe, raise_event, Event
 
@@ -33,13 +35,15 @@ class EditorPanel(QSplitter):
 
         # Set up the tree
         self.tree_view.setHeaderHidden(True)
+        self.tree_view.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.CustomContextMenu)
 
         # Then for the rows, a more complex handling is required depending on what is selected in tree widget
         # This subscribes the editor panel to events happening in the component manager
         subscribe(Event.ComponentChanged, self._update_view)
         # These connect QT events to functions in the program. This makes user input work.
-        self.tree_view.itemActivated.connect(self._on_tree_selection_changed)
+        self.tree_view.currentItemChanged.connect(self._on_tree_selection_changed)
         self.tree_view.itemChanged.connect(self._tree_data_changed)
+        self.tree_view.customContextMenuRequested.connect(self._tree_context_menu_requested)
 
     # Whenever data changes, this function causes the whole editor panel UI to be rebuilt
     def _update_view(self):
@@ -52,9 +56,13 @@ class EditorPanel(QSplitter):
             self.tree_view.addTopLevelItem(new_item)
 
     # This triggers the table view to be generated whenever a new item is selected in the tree view
-    def _on_tree_selection_changed(self, item: CustomQTreeWidgetItem):
+    def _on_tree_selection_changed(self, item: CustomQTreeWidgetItem, old_item: CustomQTreeWidgetItem):
         fresh_layout = QVBoxLayout()
         config_container = QWidget()
+
+        if item is None:
+            print("No CutsomQTreeWidgeItem passed, blanking!")
+            return
 
         q_list_widget_items: list[QWidget] = item.component.get_ui()
 
@@ -74,5 +82,23 @@ class EditorPanel(QSplitter):
         self._on_tree_selection_changed(item)
         raise_event(Event.ComponentChanged)
 
+    def _tree_context_menu_requested(self, menu_position: QPoint):
+        menu = QMenu()
+        menu_add_group = menu.addAction("Add Group")
+        menu_add_group.triggered.connect(lambda: self._tree_context_menu_add_component(ComponentType.Group))
+        menu_add_lens = menu.addAction("Add Lens")
+        menu_add_lens.triggered.connect(lambda: self._tree_context_menu_add_component(ComponentType.Lens))
+        menu_spacer = menu.addSeparator()
+        menu_cut = menu.addAction("Cut")
+        menu_copy = menu.addAction("Copy")
+        menu_paste = menu.addAction("Paste")
 
 
+        menu.exec(QPoint(menu_position.x()+menu.sizeHint().width(), menu_position.y()+menu.sizeHint().height()))
+
+    def _tree_context_menu_add_component(self, component_type):
+        if self.tree_view.currentItem() is not None:
+            ComponentManager.get_manager().new_component(component_type, parent=self.tree_view.currentItem().component)
+
+        if self.tree_view.currentItem() is None:
+            ComponentManager.get_manager().new_component(component_type)

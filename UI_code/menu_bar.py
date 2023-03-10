@@ -13,8 +13,14 @@ class MenuBar(QMenuBar):
         # Create the interactions for the "file" menu
         file_menu = self.addMenu("File")
         #Create the interaction for the "New" submenu
-        file_menu_new = file_menu.addAction("New")
-        file_menu_new.triggered.connect(self.file_add_clicked)
+        file_menu_new = file_menu.addMenu("New")
+        new_menu_group = file_menu_new.addAction("Group")
+        new_menu_lens = file_menu_new.addAction("Lens")
+
+
+        new_menu_lens.triggered.connect(lambda: self.file_add_clicked(ComponentType.Lens))
+        new_menu_group.triggered.connect(lambda: self.file_add_clicked(ComponentType.Group))
+
 
 
         file_menu_open = file_menu.addAction("Open")
@@ -25,6 +31,6 @@ class MenuBar(QMenuBar):
 
 
     @staticmethod
-    def file_add_clicked():
-        ComponentManager.get_manager().new_component(component_type=ComponentType.Lens)
+    def file_add_clicked(part_type: ComponentType):
+        ComponentManager.get_manager().new_component(part_type)
         print("Been pressed")

@@ -1,5 +1,6 @@
 from Components.component import Component, ComponentType
 from Components.lens import Lens
+from Components.group import Group
 from event_manager import raise_event, Event
 
 
@@ -17,7 +18,7 @@ class ComponentManager:
             ComponentManager.singleton_manager_instance = ComponentManager()
         return ComponentManager.singleton_manager_instance
 
-    def new_component(self, component_type: ComponentType, component_name: str = None):
+    def new_component(self, component_type: ComponentType, component_name: str = None, parent: Component = None):
         new_component = None
         match component_type:
             case ComponentType.Lens:
@@ -38,8 +39,7 @@ class ComponentManager:
                 # TODO: Implement lights
                 exit("Light not implemented")
             case ComponentType.Group:
-                # TODO: Implement groups
-                exit("Group not implemented")
+                new_component = Group(component_name=component_name)
             case unknown_type:
                 print(f"ComponentManager: Invalid component type: {unknown_type}")
                 return
@@ -48,6 +48,8 @@ class ComponentManager:
         new_component.component_UUID = self.UUID_increment
 
         self.components.append(new_component)
+        if parent is not None:
+            new_component.set_parent(parent)
         raise_event(Event.ComponentChanged)
 
     @staticmethod
