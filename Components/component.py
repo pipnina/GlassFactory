@@ -67,12 +67,14 @@ class Component:
         return layout  # widget
 
     def set_parent(self, parent):
-        if parent is not None:
-            print("Cyka Blyat")
+        if self.parent is None:
+            self.parent = parent
+            self.parent.add_child(self)
+
+        if self.parent is not None:
             self.parent.remove_child(self)
             parent.add_child(self)
-            return
-        print("Parent is None, cannot set parent")
+            self.parent = parent
 
     # Event handlers for handling user input to the UI created
     def _on_name_changed(self, widgetbox):

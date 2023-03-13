@@ -13,22 +13,12 @@ class Group(Component):
 
         self.children: list[Component] = []
 
-    def add_child(self, child: Component):
-        for component in self.children:
-            if component.component_UUID == child.component_UUID:
-                print("Component already child of this group!")
-                return
+    def add_child(self, new_child: Component):
+        if new_child not in self.children:
+            self.children.append(new_child)
+        else:
+            print(f"Oh no! {new_child.component_name} is already owned by {self.component_name}!")
 
-        if child.parent is not None:
-            print("Component is already a child of another group!")
-            return
-
-        self.children.append(child)
-
-    def remove_child(self, child: Component):
-        for component in self.children:
-            if component.component_UUID == child.component_UUID:
-                component.parent = None
-                self.children.remove(component)
-                return
-
+    def remove_child(self, old_child: Component):
+        if old_child in self.children:
+            self.children.remove(old_child)

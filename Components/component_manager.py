@@ -47,9 +47,12 @@ class ComponentManager:
         self.UUID_increment += 1
         new_component.component_UUID = self.UUID_increment
 
-        self.components.append(new_component)
         if parent is not None:
             new_component.set_parent(parent)
+
+        print(f"Part parent: {new_component.parent}")
+
+        self.components.append(new_component)
         raise_event(Event.ComponentChanged)
 
     @staticmethod
