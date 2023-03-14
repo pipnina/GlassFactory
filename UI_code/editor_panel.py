@@ -56,8 +56,9 @@ class EditorPanel(QSplitter):
                 new_item = CustomQTreeWidgetItem(item)
                 new_item.setFlags(new_item.flags() | QtCore.Qt.ItemIsEditable)
                 new_item.setExpanded(True)
+                new_item.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.CustomContextMenu)
                 self.tree_view.addTopLevelItem(new_item)
-        #Iterate through the top level items, to recursively add their children to the tree.
+        # Iterate through the top level items, to recursively add their children to the tree.
         for widget_index in range(0, self.tree_view.topLevelItemCount()):
             widget = self.tree_view.topLevelItem(widget_index)
             if type(widget.component) == Group and len(widget.component.children) > 0:
@@ -113,10 +114,10 @@ class EditorPanel(QSplitter):
         self._on_tree_selection_changed(item)
         raise_event(Event.ComponentChanged)
 
-    def _tree_context_menu_requested(self, menu_position: QPoint):
+    def _tree_context_menu_requested(self, menu_position: QPoint, tree_widget: CustomQTreeWidgetItem = None):
         menu = QMenu()
         menu_add_group = menu.addAction("Add Group")
-        menu_add_group.triggered.connect(lambda: self._tree_context_menu_add_component(ComponentType.Group))
+        menu_add_group.triggered.connect(lambda: self._tree_context_menu_add_component(ComponentType.Group, tree_widget))
         menu_add_lens = menu.addAction("Add Lens")
         menu_add_lens.triggered.connect(lambda: self._tree_context_menu_add_component(ComponentType.Lens))
         menu_spacer = menu.addSeparator()
@@ -124,14 +125,13 @@ class EditorPanel(QSplitter):
         menu_copy = menu.addAction("Copy")
         menu_paste = menu.addAction("Paste")
 
+        menu.exec(self.tree_view.mapToGlobal(menu_position))
 
-        menu.exec(QPoint(menu_position.x()+menu.sizeHint().width(), menu_position.y()+menu.sizeHint().height()))
-
-    def _tree_context_menu_add_component(self, component_type):
-        if self.tree_view.currentItem() is not None:
-            ComponentManager.get_manager().new_component(component_type, parent=self.tree_view.currentItem().component)
+    def _tree_context_menu_add_component(self, component_type, tree_widget: CustomQTreeWidgetItem):
+        if tree_widget is not None:
+            ComponentManager.get_manager().new_component(component_type, parent= tree_widget.component)
             return
 
-        if self.tree_view.currentItem() is None:
+        if tree_widget is None:
             ComponentManager.get_manager().new_component(component_type)
             return
