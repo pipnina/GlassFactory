@@ -15,17 +15,22 @@ class ComponentType(Enum):
     Group = 7
 
 
-@dataclass
 class Component:
-    component_name: str
-    component_type: ComponentType
-    component_UUID: None
-    parent: None
-    x: float = 0
-    y: float = 0
-    #z: float = 0
-    xr: float = 0
-    # yr: float = 0
+    def __init__(self,
+                 component_name: str,
+                 component_type: ComponentType,
+                 component_uuid: None,
+                 x: float = 0,
+                 y: float = 0,
+                 xr: float = 0):
+        self.component_name = component_name
+        self.component_type = component_type
+        self.component_UUID = component_uuid
+        self.x: float = x
+        self.y: float = y
+        self.xr: float = xr
+        self.parent = None
+
 
     def get_ui(self):
         q_list_widget_items = []
@@ -69,12 +74,16 @@ class Component:
     def set_parent(self, parent):
         if self.parent is None:
             self.parent = parent
-            self.parent.add_child(self)
+            if parent is not None:
+                self.parent.add_child(self)
+            return
 
         if self.parent is not None:
             self.parent.remove_child(self)
-            parent.add_child(self)
+            if parent is not None:
+                self.parent.add_child(self)
             self.parent = parent
+            return
 
     # Event handlers for handling user input to the UI created
     def _on_name_changed(self, widgetbox):

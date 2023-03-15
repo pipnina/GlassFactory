@@ -9,7 +9,7 @@ class Group(Component):
         if component_name is None:
             component_name = "New Group"
 
-        super().__init__(component_name=component_name, component_type=ComponentType.Group, parent=parent, component_UUID=None)
+        super().__init__(component_name=component_name, component_type=ComponentType.Group, component_uuid=None)
 
         self.children: list[Component] = []
 

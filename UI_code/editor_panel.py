@@ -56,13 +56,14 @@ class EditorPanel(QSplitter):
                 new_item = CustomQTreeWidgetItem(item)
                 new_item.setFlags(new_item.flags() | QtCore.Qt.ItemIsEditable)
                 new_item.setExpanded(True)
-                new_item.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.CustomContextMenu)
                 self.tree_view.addTopLevelItem(new_item)
         # Iterate through the top level items, to recursively add their children to the tree.
         for widget_index in range(0, self.tree_view.topLevelItemCount()):
             widget = self.tree_view.topLevelItem(widget_index)
             if type(widget.component) == Group and len(widget.component.children) > 0:
                 self._add_children_to_tree(self.tree_view.topLevelItem(widget_index))
+
+        self.tree_view.expandAll()
 
     # For each top level component:
     # Build the top level tree widget item
@@ -114,24 +115,47 @@ class EditorPanel(QSplitter):
         self._on_tree_selection_changed(item)
         raise_event(Event.ComponentChanged)
 
-    def _tree_context_menu_requested(self, menu_position: QPoint, tree_widget: CustomQTreeWidgetItem = None):
+    def _tree_context_menu_requested(self, menu_position: QPoint):
+        widget: CustomQTreeWidgetItem = self.tree_view.itemAt(menu_position)
+
         menu = QMenu()
         menu_add_group = menu.addAction("Add Group")
-        menu_add_group.triggered.connect(lambda: self._tree_context_menu_add_component(ComponentType.Group, tree_widget))
+        menu_add_group.triggered.connect(lambda: self._tree_context_menu_add_component(ComponentType.Group, widget))
         menu_add_lens = menu.addAction("Add Lens")
-        menu_add_lens.triggered.connect(lambda: self._tree_context_menu_add_component(ComponentType.Lens))
+        menu_add_lens.triggered.connect(lambda: self._tree_context_menu_add_component(ComponentType.Lens, widget))
         menu_spacer = menu.addSeparator()
         menu_cut = menu.addAction("Cut")
+        menu_cut.triggered.connect(lambda: self._tree_context_menu_cut(widget))
         menu_copy = menu.addAction("Copy")
+        menu_copy.triggered.connect(lambda: self._tree_context_menu_copy(widget))
         menu_paste = menu.addAction("Paste")
+        menu_paste.triggered.connect(lambda: self._tree_context_menu_paste(widget))
 
         menu.exec(self.tree_view.mapToGlobal(menu_position))
 
     def _tree_context_menu_add_component(self, component_type, tree_widget: CustomQTreeWidgetItem):
         if tree_widget is not None:
-            ComponentManager.get_manager().new_component(component_type, parent= tree_widget.component)
+            ComponentManager.get_manager().new_component(component_type, parent=tree_widget.component)
             return
 
         if tree_widget is None:
             ComponentManager.get_manager().new_component(component_type)
             return
+
+    def _tree_context_menu_cut(self, widget: CustomQTreeWidgetItem):
+        if widget is None:
+            return
+        ComponentManager.get_manager().cut_component(widget.component)
+
+    def _tree_context_menu_copy(self, widget: CustomQTreeWidgetItem):
+        if widget is None:
+            return
+        ComponentManager.get_manager().copy_component(widget.component)
+        pass
+
+    def _tree_context_menu_paste(self, widget: CustomQTreeWidgetItem):
+        if widget is None:
+            ComponentManager.get_manager().paste_component(None)
+            return
+        ComponentManager.get_manager().paste_component(widget.component)
+        pass

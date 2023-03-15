@@ -7,7 +7,6 @@ from event_manager import raise_event, Event
 class Lens(Component):
     def __init__(self,
                  component_name: str,
-                 parent=None,
                  diameter: float = 30,
                  thickness: float = 5,
                  surfaces: tuple[SurfaceProperties, SurfaceProperties] = None):
@@ -15,7 +14,7 @@ class Lens(Component):
         if component_name is None:
             component_name = "New Lens"
 
-        super().__init__(component_name=component_name, component_type=ComponentType.Lens, parent=parent, component_UUID=None)
+        super().__init__(component_name=component_name, component_type=ComponentType.Lens, component_uuid=None)
 
         # If no surfaces are provided, create a pair
         if surfaces is None:
