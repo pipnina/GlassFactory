@@ -4,12 +4,12 @@ from Components.component import Component, ComponentType
 class Group(Component):
     def __init__(self,
                  component_name: str,
-                 parent=None):
+                 ):
 
         if component_name is None:
             component_name = "New Group"
 
-        super().__init__(component_name=component_name, component_type=ComponentType.Group, component_uuid=None)
+        super().__init__(component_name=component_name, component_type=ComponentType.Group)
 
         self.children: list[Component] = []
 

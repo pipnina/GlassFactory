@@ -19,17 +19,16 @@ class Component:
     def __init__(self,
                  component_name: str,
                  component_type: ComponentType,
-                 component_uuid: None,
                  x: float = 0,
                  y: float = 0,
                  xr: float = 0):
         self.component_name = component_name
         self.component_type = component_type
-        self.component_UUID = component_uuid
         self.x: float = x
         self.y: float = y
         self.xr: float = xr
         self.parent = None
+        self.component_UUID = None
 
 
     def get_ui(self):
