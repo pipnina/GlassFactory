@@ -71,6 +71,9 @@ class Component:
         return layout  # widget
 
     def set_parent(self, parent):
+        if parent == self:
+            print("You can't set a component's parent to itself!")
+            return
         if self.parent is None:
             self.parent = parent
             if parent is not None:
@@ -79,9 +82,9 @@ class Component:
 
         if self.parent is not None:
             self.parent.remove_child(self)
+            self.parent = parent
             if parent is not None:
                 self.parent.add_child(self)
-            self.parent = parent
             return
 
     # Event handlers for handling user input to the UI created

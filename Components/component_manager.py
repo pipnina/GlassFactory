@@ -102,8 +102,7 @@ class ComponentManager:
         self.UUID_increment += 1
         new_component.component_UUID = self.UUID_increment
 
-        if referred.parent is not None:
-            new_component.set_parent(referred.parent)
+        # new_component.set_parent(referred.parent)
 
         self.components.append(new_component)
         raise_event(Event.ComponentChanged)
@@ -126,8 +125,9 @@ class ComponentManager:
         self.copied_component_has_been_cut = False
 
     def paste_component(self, parent: Component):
-        if type(parent) is not Group and type(parent) is not None:
-            return
+        # if type(parent) is not Group and type(parent) is not None:
+        #    print("Not group not none")
+        #    return
 
         if self.copied_component_has_been_cut:
             self.copied_component_has_been_cut = False
@@ -135,10 +135,12 @@ class ComponentManager:
             raise_event(Event.ComponentChanged)
             return
 
-        root_of_paste = self.new_component_by_copy(self.copied_component)
-
-
-        raise_event(Event.ComponentChanged)
+        if not self.copied_component_has_been_cut:
+            root_of_paste = self.new_component_by_copy(self.copied_component)
+            root_of_paste.set_parent(parent)
+            self._duplicate_tree(root_of_paste, self.copied_component)
+            raise_event(Event.ComponentChanged)
+            return
 
     # We start with the root of the paste, with a new component by copy of the self.copied_component
     # We pass the copied_component and the root_of_paste to the _duplicate_tree method
@@ -148,5 +150,9 @@ class ComponentManager:
     # The method will loop through the children of the root, create copies of them, and link them to the "copied comp"
     # The method will then call itself, with the "copied comp" being each of those children, and the "root" that of root
 
-    def _duplicate_tree(self, component: Component):
-        pass
+    def _duplicate_tree(self, paste_root: Component, copied_comp: Component):
+        if type(copied_comp) is Group:
+            for component in copied_comp.children:
+                new_child = self.new_component_by_copy(component)
+                new_child.set_parent(paste_root)
+                self._duplicate_tree(new_child, component)
