@@ -112,7 +112,6 @@ class EditorPanel(QSplitter):
 
     def _tree_data_changed(self, item: CustomQTreeWidgetItem, _column: int):
         item.component.component_name = item.text(0)
-        self._on_tree_selection_changed(item)
         raise_event(Event.ComponentChanged)
 
     def _tree_context_menu_requested(self, menu_position: QPoint):
