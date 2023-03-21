@@ -123,6 +123,9 @@ class EditorPanel(QSplitter):
         menu_add_lens = menu.addAction("Add Lens")
         menu_add_lens.triggered.connect(lambda: self._tree_context_menu_add_component(ComponentType.Lens, widget))
         menu_spacer = menu.addSeparator()
+        menu_delete = menu.addAction("Delete")
+        menu_delete.triggered.connect(lambda: self._tree_context_menu_delete(widget))
+        menu_spacer2 = menu.addSeparator()
         menu_cut = menu.addAction("Cut")
         menu_cut.triggered.connect(lambda: self._tree_context_menu_cut(widget))
         menu_copy = menu.addAction("Copy")
@@ -140,6 +143,9 @@ class EditorPanel(QSplitter):
         if tree_widget is None:
             ComponentManager.get_manager().new_component(component_type)
             return
+
+    def _tree_context_menu_delete(self, widget: CustomQTreeWidgetItem):
+        ComponentManager.get_manager().delete_component(widget.component)
 
     def _tree_context_menu_cut(self, widget: CustomQTreeWidgetItem):
         if widget is None:

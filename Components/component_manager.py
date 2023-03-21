@@ -125,9 +125,13 @@ class ComponentManager:
         self.copied_component_has_been_cut = False
 
     def paste_component(self, parent: Component):
-        # if type(parent) is not Group and type(parent) is not None:
-        #    print("Not group not none")
-        #    return
+        if self.copied_component is None:
+            print("No item to paste")
+            return
+
+        if type(parent) is not Group:
+            print("Must paste component into a group or tree root!")
+            return
 
         if self.copied_component_has_been_cut:
             self.copied_component_has_been_cut = False
@@ -156,3 +160,17 @@ class ComponentManager:
                 new_child = self.new_component_by_copy(component)
                 new_child.set_parent(paste_root)
                 self._duplicate_tree(new_child, component)
+        print("Is not a group: Skip!")
+
+    # This recursively removes a component from the component list, ensuring it takes its children with it!
+    # Split into two functions to avoid having to call Event.ComponentChanged on every depth of the recursion
+    def delete_component(self, component):
+        self._delete_component_recurse(component)
+        raise_event(Event.ComponentChanged)
+
+    def _delete_component_recurse(self, component):
+        if type(component) is Group:
+            for child in component.children:
+                self._delete_component_recurse(child)
+        component.set_parent(None)
+        self.components.remove(component)
