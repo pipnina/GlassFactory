@@ -1,6 +1,5 @@
 from Components.component import Component, ComponentType
 from Components.surface_properties import SurfaceProperties
-from PySide6.QtWidgets import QLineEdit
 from event_manager import raise_event, Event
 
 
@@ -57,3 +56,27 @@ class Lens(Component):
             print("You need to enter a number!")
             widgetbox.setText(str(self.thickness))
 
+    def clone(self):
+        new_component = self.__class__.__base__.clone()
+        new_lens = Lens.from_component(new_component)
+
+        new_component = Lens(f"{self.component_name} copy",
+                             self.component_type,
+                             self.x,
+                             self.y,
+                             self.xr)
+
+        new_component.thickness = self.thickness
+        new_component.diameter = self.diameter
+
+        new_component.surfaces[0].is_flat = self.surfaces[0].is_flat
+        new_component.surfaces[0].is_reflective = self.surfaces[0].is_reflective
+        new_component.surfaces[0].focal_length = self.surfaces[0].focal_length
+        new_component.surfaces[0].conic_constant = self.surfaces[0].conic_constant
+
+        new_component.surfaces[1].is_flat = self.surfaces[1].is_flat
+        new_component.surfaces[1].is_reflective = self.surfaces[1].is_reflective
+        new_component.surfaces[1].focal_length = self.surfaces[1].focal_length
+        new_component.surfaces[1].conic_constant = self.surfaces[1].conic_constant
+
+        return new_component

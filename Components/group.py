@@ -22,3 +22,6 @@ class Group(Component):
     def remove_child(self, old_child: Component):
         if old_child in self.children:
             self.children.remove(old_child)
+
+    def duplicate(self):
+        pass

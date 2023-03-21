@@ -141,8 +141,8 @@ class ComponentManager:
 
         if not self.copied_component_has_been_cut:
             root_of_paste = self.new_component_by_copy(self.copied_component)
-            root_of_paste.set_parent(parent)
             self._duplicate_tree(root_of_paste, self.copied_component)
+            root_of_paste.set_parent(parent)
             raise_event(Event.ComponentChanged)
             return
 

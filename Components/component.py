@@ -115,3 +115,11 @@ class Component:
         except ValueError:
             print("You need to enter a number!")
             widgetbox.setText(str(self.xr))
+
+    def clone(self):
+        new_component = Component(f"{self.component_name} copy",
+                                  self.component_type,
+                                  self.x,
+                                  self.y,
+                                  self.xr)
+        return
