@@ -11,7 +11,7 @@ class Lens(Component):
                  xr=0,
                  diameter: float = 30,
                  thickness: float = 5,
-                 refractive_index = 1.414,
+                 refractive_index=1.414,
                  surfaces: tuple[SurfaceProperties, SurfaceProperties] = None):
 
         if component_name is None:
@@ -76,6 +76,6 @@ class Lens(Component):
                              self.thickness,
                              self.diameter,
                              self.refractive_index,
-                             tuple(new_surface, new_surface2))
+                             (new_surface, new_surface2))
 
         return new_component

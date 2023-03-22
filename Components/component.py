@@ -29,7 +29,6 @@ class Component:
         self.parent = None
         self.component_UUID = None
 
-
     def get_ui(self):
         q_list_widget_items = []
 

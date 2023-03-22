@@ -55,58 +55,18 @@ class ComponentManager:
         self.components.append(new_component)
         raise_event(Event.ComponentChanged)
 
-    def new_component_by_copy(self, referred: Component):
-        component_type = referred.component_type
-        match component_type:
-            case ComponentType.Lens:
-                new_component = Lens(referred.component_name)
-                new_component.x = referred.x
-                new_component.y = referred.y
-                new_component.xr = referred.xr
-                new_component.thickness = referred.thickness
-                new_component.diameter = referred.diameter
-
-                new_component.surfaces[0].is_flat = referred.surfaces[0].is_flat
-                new_component.surfaces[0].is_reflective = referred.surfaces[0].is_reflective
-                new_component.surfaces[0].focal_length = referred.surfaces[0].focal_length
-                new_component.surfaces[0].conic_constant = referred.surfaces[0].conic_constant
-
-                new_component.surfaces[1].is_flat = referred.surfaces[1].is_flat
-                new_component.surfaces[1].is_reflective = referred.surfaces[1].is_reflective
-                new_component.surfaces[1].focal_length = referred.surfaces[1].focal_length
-                new_component.surfaces[1].conic_constant = referred.surfaces[1].conic_constant
-            case ComponentType.Baffle:
-                # TODO: Implement baffle
-                exit("Baffle not implemented")
-            case ComponentType.Prism:
-                # TODO: Implement prism
-                exit("Prism not implemented")
-            case ComponentType.Camera:
-                # TODO: Implement camera
-                exit("Camera not implemented")
-            case ComponentType.Focuser:
-                # TODO: Implement focuser
-                exit("Focuser not implemented")
-            case ComponentType.Light:
-                # TODO: Implement lights
-                exit("Light not implemented")
-            case ComponentType.Group:
-                new_component = Group(referred.component_name)
-                new_component.x = referred.x
-                new_component.y = referred.y
-                new_component.xr = referred.xr
-            case unknown_type:
-                print(f"ComponentManager: Invalid component type: {unknown_type}")
-                return
-
+    def add_component_from_template(self, new_component: Component):
         self.UUID_increment += 1
         new_component.component_UUID = self.UUID_increment
-
-        # new_component.set_parent(referred.parent)
-
         self.components.append(new_component)
         raise_event(Event.ComponentChanged)
-        return new_component
+
+    def add_components_from_list(self, new_components: list[Component]):
+        for component in new_components:
+            self.UUID_increment += 1
+            component.component_UUID = self.UUID_increment
+            self.components.append(component)
+        raise_event(Event.ComponentChanged)
 
     @staticmethod
     def get_component_by_uuid(uuid: int):
@@ -129,7 +89,7 @@ class ComponentManager:
             print("No item to paste")
             return
 
-        if type(parent) is not Group:
+        if type(parent) is not Group and parent is not None:
             print("Must paste component into a group or tree root!")
             return
 
@@ -140,12 +100,22 @@ class ComponentManager:
             return
 
         if not self.copied_component_has_been_cut:
+            new_components = self.copied_component.clone()
+            if type(new_components) is list:
+                new_components[0].set_parent(parent)
+                self.add_components_from_list(new_components)
+            else:
+                new_components.set_parent(parent)
+                self.add_component_from_template(new_components)
+
+        """
+        if not self.copied_component_has_been_cut:
             root_of_paste = self.new_component_by_copy(self.copied_component)
             self._duplicate_tree(root_of_paste, self.copied_component)
             root_of_paste.set_parent(parent)
             raise_event(Event.ComponentChanged)
             return
-
+        """
     # We start with the root of the paste, with a new component by copy of the self.copied_component
     # We pass the copied_component and the root_of_paste to the _duplicate_tree method
     # The method checks if the "copied component" is a group or not. If not a group:
@@ -153,7 +123,7 @@ class ComponentManager:
     # If the "copied component" is a group:
     # The method will loop through the children of the root, create copies of them, and link them to the "copied comp"
     # The method will then call itself, with the "copied comp" being each of those children, and the "root" that of root
-
+    """
     def _duplicate_tree(self, paste_root: Component, copied_comp: Component):
         if type(copied_comp) is Group:
             for component in copied_comp.children:
@@ -161,6 +131,7 @@ class ComponentManager:
                 new_child.set_parent(paste_root)
                 self._duplicate_tree(new_child, component)
         print("Is not a group: Skip!")
+    """
 
     # This recursively removes a component from the component list, ensuring it takes its children with it!
     # Split into two functions to avoid having to call Event.ComponentChanged on every depth of the recursion

@@ -30,7 +30,11 @@ class Group(Component):
         if old_child in self.children:
             self.children.remove(old_child)
 
-    def duplicate(self):
+    # We still duplicate the component as with other component classes, however
+    # This function returns a list instead. So we need to handle it slightly differently.
+    # because groups add themselves to the list returned by duplicate() first, we access it with [0] to set parent
+    # other components are handled more simply
+    def clone(self):
         new_component = Group(f"{self.component_name} copy",
                               self.x,
                               self.y,
@@ -38,13 +42,14 @@ class Group(Component):
 
         component_list = [new_component]
 
-        """
         for child in self.children:
             if type(child) is Group:
                 new_child = child.clone()
-            new_child = child.clone()
-            new_child.set_parent(new_component)
-            component_list.append(new_child)
-        """
+                new_child[0].set_parent(new_component)
+                component_list = component_list + new_child
+            else:
+                new_child = child.clone()
+                new_child.set_parent(new_component)
+                component_list.append(new_child)
 
         return component_list
