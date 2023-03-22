@@ -18,12 +18,11 @@ class ComponentType(Enum):
 class Component:
     def __init__(self,
                  component_name: str,
-                 component_type: ComponentType,
                  x: float = 0,
                  y: float = 0,
                  xr: float = 0):
         self.component_name = component_name
-        self.component_type = component_type
+        self.component_type = None
         self.x: float = x
         self.y: float = y
         self.xr: float = xr
@@ -118,8 +117,7 @@ class Component:
 
     def clone(self):
         new_component = Component(f"{self.component_name} copy",
-                                  self.component_type,
                                   self.x,
                                   self.y,
                                   self.xr)
-        return
+        return new_component
