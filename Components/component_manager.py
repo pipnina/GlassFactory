@@ -2,7 +2,6 @@ from Components.component import Component, ComponentType
 from Components.lens import Lens
 from Components.group import Group
 from event_manager import raise_event, Event
-import copy
 
 
 class ComponentManager:
