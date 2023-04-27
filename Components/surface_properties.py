@@ -11,6 +11,13 @@ class SurfaceProperties:
     is_flat: bool = False
     is_reflective: bool = False
 
+    def clone(self):
+        new_component = SurfaceProperties(focal_length=self.focal_length,
+                                          conic_constant=self.conic_constant,
+                                          is_flat=self.is_flat,
+                                          is_reflective=self.is_reflective)
+        return new_component
+
     def get_ui(self, index: int):
         vertical_layout = QVBoxLayout()
         top_label = QLabel(f"Surface {index}")

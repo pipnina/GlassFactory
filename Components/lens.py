@@ -1,21 +1,28 @@
 from Components.component import Component, ComponentType
 from Components.surface_properties import SurfaceProperties
-from PySide6.QtWidgets import QLineEdit
 from event_manager import raise_event, Event
 
 
 class Lens(Component):
     def __init__(self,
                  component_name: str,
+                 x=0,
+                 y=0,
+                 xr=0,
                  diameter: float = 30,
                  thickness: float = 5,
+                 refractive_index=1.414,
                  surfaces: tuple[SurfaceProperties, SurfaceProperties] = None):
 
         if component_name is None:
             component_name = "New Lens"
 
-        super().__init__(component_name=component_name, component_type=ComponentType.Lens)
+        super().__init__(component_name=component_name,
+                         x=x,
+                         y=y,
+                         xr=xr)
 
+        self.component_type = ComponentType.Lens
         # If no surfaces are provided, create a pair
         if surfaces is None:
             surfaces = (SurfaceProperties(), SurfaceProperties())
@@ -23,6 +30,7 @@ class Lens(Component):
 
         self.diameter = diameter
         self.thickness = thickness
+        self.refractive_index = refractive_index
 
     # continue the get_ui method from the parent class Component
     def get_ui(self):
@@ -35,6 +43,9 @@ class Lens(Component):
         # thickness list element
         thickness_widget = self._make_config_widget("Thickness: ", self.thickness, self._on_thickness_value_changed)
         q_list_widget_items.append(thickness_widget)
+
+        refractive_index_widget = self._make_config_widget("Refractive Index: ", self.refractive_index, self._on_refractive_index_value_changed)
+        q_list_widget_items.append(refractive_index_widget)
 
         q_list_widget_items.append(self.surfaces[0].get_ui(1))
         q_list_widget_items.append(self.surfaces[1].get_ui(2))
@@ -57,3 +68,25 @@ class Lens(Component):
             print("You need to enter a number!")
             widgetbox.setText(str(self.thickness))
 
+    def _on_refractive_index_value_changed(self, widgetbox):
+        try:
+            self.refractive_index = float(widgetbox.displayText())
+            raise_event(Event.ComponentChanged)
+        except ValueError:
+            print("You need to enter a number!")
+            widgetbox.setText(str(self.refractive_index))
+
+    def clone(self):
+        new_surface = self.surfaces[0].clone()
+        new_surface2 = self.surfaces[1].clone()
+
+        new_component = Lens(f"{self.component_name} copy",
+                             self.y,
+                             self.xr,
+                             self.x,
+                             self.thickness,
+                             self.diameter,
+                             self.refractive_index,
+                             (new_surface, new_surface2))
+
+        return new_component

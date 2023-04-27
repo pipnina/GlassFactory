@@ -18,18 +18,16 @@ class ComponentType(Enum):
 class Component:
     def __init__(self,
                  component_name: str,
-                 component_type: ComponentType,
                  x: float = 0,
                  y: float = 0,
                  xr: float = 0):
         self.component_name = component_name
-        self.component_type = component_type
+        self.component_type = None
         self.x: float = x
         self.y: float = y
         self.xr: float = xr
         self.parent = None
         self.component_UUID = None
-
 
     def get_ui(self):
         q_list_widget_items = []
@@ -115,3 +113,10 @@ class Component:
         except ValueError:
             print("You need to enter a number!")
             widgetbox.setText(str(self.xr))
+
+    def clone(self):
+        new_component = Component(f"{self.component_name} copy",
+                                  self.x,
+                                  self.y,
+                                  self.xr)
+        return new_component
