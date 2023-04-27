@@ -44,6 +44,9 @@ class Lens(Component):
         thickness_widget = self._make_config_widget("Thickness: ", self.thickness, self._on_thickness_value_changed)
         q_list_widget_items.append(thickness_widget)
 
+        refractive_index_widget = self._make_config_widget("Refractive Index: ", self.refractive_index, self._on_refractive_index_value_changed)
+        q_list_widget_items.append(refractive_index_widget)
+
         q_list_widget_items.append(self.surfaces[0].get_ui(1))
         q_list_widget_items.append(self.surfaces[1].get_ui(2))
 
@@ -64,6 +67,14 @@ class Lens(Component):
         except ValueError:
             print("You need to enter a number!")
             widgetbox.setText(str(self.thickness))
+
+    def _on_refractive_index_value_changed(self, widgetbox):
+        try:
+            self.refractive_index = float(widgetbox.displayText())
+            raise_event(Event.ComponentChanged)
+        except ValueError:
+            print("You need to enter a number!")
+            widgetbox.setText(str(self.refractive_index))
 
     def clone(self):
         new_surface = self.surfaces[0].clone()
