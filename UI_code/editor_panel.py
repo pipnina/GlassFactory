@@ -81,16 +81,15 @@ class EditorPanel(QSplitter):
                 if type(component) == Group and len(component.children) > 0:
                     self._add_children_to_tree(new_widget)
 
-
-
-
     # This triggers the table view to be generated whenever a new item is selected in the tree view
+    # The fresh layout arranges the data from the components vertically, and the container is a widget
+    # for formatting purposes
     def _on_tree_selection_changed(self, item: CustomQTreeWidgetItem, old_item: CustomQTreeWidgetItem):
         fresh_layout = QVBoxLayout()
         config_container = QWidget()
 
         if item is None and old_item is None:
-            print("No CutsomQTreeWidgeItem passed, blanking!")
+            print("No CustomQTreeWidgetItem passed, blanking!")
             return
 
         if item is None and old_item is not None:
